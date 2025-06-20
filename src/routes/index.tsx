@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import Board from "@/components/board";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -8,8 +8,7 @@ export const Route = createFileRoute("/")({
 function Index() {
 	return (
 		<div className="p-2">
-			<h3>Welcome Home!</h3>
-			<Button>ShadcnUI</Button>
+			<Board />
 		</div>
 	);
 }
