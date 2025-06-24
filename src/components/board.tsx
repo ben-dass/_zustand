@@ -1,37 +1,13 @@
-import { create } from "zustand";
-import { combine } from "zustand/middleware";
 import Square from "./square";
 import { calculateStatus, calculateTurns, calculateWinner } from "@/lib/utils";
 
-const useGameStore = create(
-	combine({ squares: Array(9).fill(null), xIsNext: true }, (set) => {
-		return {
-			setSquares: (nextSquares) => {
-				set((state) => ({
-					squares:
-						typeof nextSquares === "function"
-							? nextSquares(state.squares)
-							: nextSquares,
-				}));
-			},
-			setXIsNext: (nextXIsNext) => {
-				set((state) => ({
-					xIsNext:
-						typeof nextXIsNext === "function"
-							? nextXIsNext(state.xIsNext)
-							: nextXIsNext,
-				}));
-			},
-		};
-	})
-);
+interface IBoard {
+	xIsNext: boolean;
+	squares: Array<string | null>;
+	onPlay: (nextSquares: Array<string | null>) => void;
+}
 
-const Board = () => {
-	const squares = useGameStore((state) => state.squares);
-	const setSquares = useGameStore((state) => state.setSquares);
-	const xIsNext = useGameStore((state) => state.xIsNext);
-	const setXIsNext = useGameStore((state) => state.setXIsNext);
-
+const Board = ({ xIsNext, squares, onPlay }: IBoard) => {
 	const player = xIsNext ? "X" : "O";
 	const winner = calculateWinner(squares);
 	const turns = calculateTurns(squares);
@@ -41,9 +17,9 @@ const Board = () => {
 		if (squares[i] || winner) return;
 		const nextSquares = squares.slice();
 		nextSquares[i] = player;
-		setSquares(nextSquares);
-		setXIsNext(!xIsNext);
+		onPlay(nextSquares);
 	};
+	console.log("Board re-rendered.");
 
 	return (
 		<>

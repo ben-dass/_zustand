@@ -1,5 +1,5 @@
 interface ISquare {
-	value: string;
+	value: string | null;
 	onSquareClick?: () => void;
 }
 
