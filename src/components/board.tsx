@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 import Square from "./square";
-import { calculateStatus, calculateWinner } from "@/lib/utils";
+import { calculateStatus, calculateTurns, calculateWinner } from "@/lib/utils";
 
 const useGameStore = create(
 	combine({ squares: Array(9).fill(null), xIsNext: true }, (set) => {
@@ -38,7 +38,7 @@ const Board = () => {
 	const status = calculateStatus(winner, turns, player);
 
 	const handleClick = (i: number) => {
-		if (squares[i]) return;
+		if (squares[i] || winner) return;
 		const nextSquares = squares.slice();
 		nextSquares[i] = player;
 		setSquares(nextSquares);
@@ -46,24 +46,27 @@ const Board = () => {
 	};
 
 	return (
-		<div
-			style={{
-				display: "grid",
-				gridTemplateColumns: "repeat(3, 1fr)",
-				gridTemplateRows: "repeat(3, 1fr)",
-				width: "calc(3 * 2.5rem)",
-				height: "calc(3 * 2.5rem)",
-				border: "1px solid #999",
-			}}
-		>
-			{squares.map((square, squareIndex) => (
-				<Square
-					key={squareIndex}
-					value={square}
-					onSquareClick={() => handleClick(squareIndex)}
-				/>
-			))}
-		</div>
+		<>
+			<div style={{ marginBottom: "0.5rem" }}>{status}</div>
+			<div
+				style={{
+					display: "grid",
+					gridTemplateColumns: "repeat(3, 1fr)",
+					gridTemplateRows: "repeat(3, 1fr)",
+					width: "calc(3 * 2.5rem)",
+					height: "calc(3 * 2.5rem)",
+					border: "1px solid #999",
+				}}
+			>
+				{squares.map((square, squareIndex) => (
+					<Square
+						key={squareIndex}
+						value={square}
+						onSquareClick={() => handleClick(squareIndex)}
+					/>
+				))}
+			</div>
+		</>
 	);
 };
 
